@@ -119,3 +119,44 @@ export const activateUser = CatchAsyncError(async (req: Request, res: Response, 
         return next(new ErrorHandler("Failed to activate user", 500));
     }
 })
+
+
+// Login User 
+
+interface ILoginRequest {
+    email:string,
+    password:string
+}
+
+export const loginUser = CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try{
+    const { email, password } = req.body as ILoginRequest;
+
+    if (!email || !password) {
+        return next(new ErrorHandler("Please provide email and password", 400));
+    }
+
+    const user = await userModel.findOne({ email }).select("+password");
+    if (!user) {
+        return next(new ErrorHandler("Invalid email or password", 400));
+    }
+
+    const isPasswordMatch = await user.comparedPassword(password);
+    if (!isPasswordMatch) {
+        return next(new ErrorHandler("Invalid email or password", 400));
+    }
+
+    const accessToken = user.SignAccessToken();
+    const refreshToken = user.SignRefreshToken();
+
+    res.status(200).json({
+        success: true,
+        message: "Login successful",
+        accessToken,
+        refreshToken
+    });
+
+} catch (error: any) {
+    console.error("Login error:", error);
+    return next(new ErrorHandler("Failed to login user", 500));
+}})
