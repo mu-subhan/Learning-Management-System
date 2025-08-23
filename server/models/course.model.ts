@@ -123,7 +123,7 @@ const courseSchema = new Schema<ICourse>({
         }
     }],
     reviews:[reviewSchema],
-    courseData:courseDataSchema,
+    courseData:[courseDataSchema],
     rating:{
         type:Number,
         default:0,
