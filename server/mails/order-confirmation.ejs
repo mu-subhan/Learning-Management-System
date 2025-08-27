@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+<body>
+    <div>
+        <div>
+            <h1>Your ELearning Order is confirmed</h1>
+            <p>And we are just as excited as you are</p>
+        </div>
+        <br>
+        <br>
+        <div>
+            <h4>
+                Here's what you ordered
+            </h4>
+            <table>
+                <tr>
+                    <td> Order #: <%= order._id %></td>
+                    <!-- <td> Course Name: <%= order.name %></td> -->
+                    <!-- <td> Price: <%= order.price %></td> -->
+                    <td> Order Date: <%= order.date %></td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td>Item</td>
+                    <td>Price</td>
+                    <td>Quantity</td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td><%= order.name %></td>
+                    <td>1</td>
+                    <td>$<%= order.price %></td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td>Subtotal</td>
+                    <td>$<%= order.price %></td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td>Total</td>
+                   
+                    <td>$<%= order.price %></td>
+                </tr>
+            </table>
+     
+        </div>
+        <div class = "footer">
+            <p>If you have any question please contact our support team.
+                <a href="mailto:muhammadsubhan8934@gmail.com">muhammadsubhan8934@gmail.com</a>
+            </p>
+            <p>Thank you for choosing our service!</p>
+            <p>Copyright © 2025 Muhammad Subhan. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
