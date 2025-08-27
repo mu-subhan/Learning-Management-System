@@ -5,6 +5,8 @@ import ErrorHandler from '../utils/ErrorHandler';
 import { createCourse } from '../services/course.service';
 import CourseModel from '../models/course.model';
 import { redis } from '../utils/redis';
+import mongoose, { mongo } from 'mongoose';
+import sendMail from '../utils/sendMail';
 
 
 // Create Course
@@ -143,10 +145,9 @@ export const getCourseByUser = CatchAsyncError(async(req:Request,res:Response,ne
     }
     // console.log("course exists",courseExists);
     const course = await CourseModel.findById(courseId);
-    console.log("course",course);
-   console.log("course data",course?.courseData);
+    
     const content = course?.courseData;
-    console.log(content);
+    // console.log(content);
     res.status(200).json({
         success:true,
         content
@@ -156,4 +157,125 @@ export const getCourseByUser = CatchAsyncError(async(req:Request,res:Response,ne
         return next(new ErrorHandler(error.message,500));
     }
 
+})
+
+
+// add question in course 
+interface IAddQuestionData{
+    question:string;
+    courseId:string;
+    contentId:string;
+}
+
+export const addQuestion = CatchAsyncError(async(req:Request,res:Response,next:NextFunction)=>{
+ try {
+   const {question, courseId, contentId} = req.body as IAddQuestionData;
+
+   const course = await CourseModel.findById(courseId);
+
+   if(!mongoose.Types.ObjectId.isValid(contentId)){
+       return next(new ErrorHandler("Invalid content ID", 400));
+   }
+
+   const courseContent = course?.courseData?.find((item:any)=>item._id.equals(contentId));
+
+   if(!courseContent){
+       return next(new ErrorHandler("Content not found", 404));
+   }
+
+//  create a new question object
+const newQuestion:any={
+    user:req.user,
+    question,
+    questionReplies:[],
+}
+// add this question to our course content
+courseContent.questions.push(newQuestion);
+// save the updated course 
+await course?.save();
+
+    res.status(201).json({
+        success: true,
+        message: "Question added successfully"
+    });
+
+ } catch (error:any) {
+    return next(new ErrorHandler(error.message,500));
+ }    
+
+})
+
+// add answer in course content
+interface IAddAnswerData{
+    answer:string;
+    courseId:string;
+    contentId:string;
+    questionId:string;
+}
+
+export const addAnswer = CatchAsyncError(async(req:Request,res:Response,next:NextFunction)=>{
+
+    try {
+        
+        const {answer, courseId, contentId, questionId} = req.body as IAddAnswerData;
+
+        const course = await CourseModel.findById(courseId);
+       if(!mongoose.Types.ObjectId.isValid(contentId)){
+           return next(new ErrorHandler("Invalid content ID", 400));
+       }
+       const courseContent = course?.courseData?.find((item:any)=>item._id.equals(contentId));
+
+       if(!courseContent){
+           return next(new ErrorHandler("Content not found", 404));
+       }
+       const question = courseContent?.questions.find((q:any)=>q._id.equals(questionId));
+
+       if(!question){
+           return next(new ErrorHandler("Question not found", 404));
+       }
+
+       //    create a new answer object
+       const newAnswer:any = {
+        user:req.user,
+        answer
+       }
+
+    //    add this answer to our course content
+    
+       question.questionReplies.push(
+          newAnswer
+       );
+       
+       await course?.save();
+        
+       if(req.user?._id === question.user._id){
+        //create a notification
+
+    }else{
+        const data = {
+            name:question.user.name,
+            title:courseContent.title,
+        };
+
+        try {
+           await sendMail({
+            email:question.user.email,
+            subject:"Question Reply",
+            template:"question-reply.ejs",
+           data,
+           }) ;
+        } catch (error:any) {
+            return next(new ErrorHandler(error.message,500));
+        }
+    }
+       res.status(201).json({
+           success: true,
+           message: "Answer added successfully",
+           course,
+       });
+
+    } catch (error:any) {
+        return next(new ErrorHandler(error.message,500));
+        
+    }
 })
