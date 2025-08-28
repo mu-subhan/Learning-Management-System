@@ -2,7 +2,7 @@ import cloudinary from 'cloudinary';
 import { CatchAsyncError } from '../middleware/catchAsyncErrors';
 import { NextFunction, Request, Response } from 'express';
 import ErrorHandler from '../utils/ErrorHandler';
-import { createCourse } from '../services/course.service';
+import { createCourse, getAllCoursesService } from '../services/course.service';
 import CourseModel from '../models/course.model';
 import { redis } from '../utils/redis';
 import mongoose, { mongo } from 'mongoose';
@@ -398,4 +398,18 @@ export const addReplyToReview = CatchAsyncError(async(req:Request,res:Response,n
  } catch (error:any) {
     return next(new ErrorHandler(error.message,500));
  }
+})
+
+// get all courses for admin 
+export const getAllCoursesServices = CatchAsyncError(async(req:Request,res:Response,next:NextFunction)=>{
+    try {
+        const courses = await getAllCoursesService(res);
+        res.status(200).json({
+            success: true,
+            message: "All courses retrieved successfully",
+            courses
+        });
+    } catch (error) {
+        return next(new ErrorHandler("Internal server error",500));
+    }
 })

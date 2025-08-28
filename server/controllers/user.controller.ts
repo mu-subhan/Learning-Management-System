@@ -9,7 +9,7 @@ import path from "path";
 import sendMail from "../utils/sendMail";
 import { accessTokenOptions, refreshTokenOptions, sendToken } from "../utils/jwt";
 import { redis } from "../utils/redis";
-import { getUserById } from "../services/user.services";
+import { getAllUserService, getUserById } from "../services/user.services";
 import cloudinary from "cloudinary";
 
 
@@ -403,3 +403,19 @@ return res.status(500).json({
 });
     }
 })
+
+
+// get all users only for admin
+
+export const getUserService = CatchAsyncError(async(req:Request,res:Response,next:NextFunction)=>{
+    try {
+       const users = await getAllUserService(res);
+       res.status(200).json({
+           success: true,
+           message: "All users retrieved successfully",
+           users
+       });
+    } catch (error) {
+        return next(new ErrorHandler("Failed to get all users", 500));
+    }
+});

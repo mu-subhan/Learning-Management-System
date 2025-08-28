@@ -7,7 +7,8 @@ import CourseModel from "../models/course.model";
 import ErrorHandler from "../utils/ErrorHandler";
 import { CatchAsyncError } from "../middleware/catchAsyncErrors";
 import { NextFunction,Request,Response } from "express";
-import { newOrder } from "../services/order.service";
+import { getAllOrderServices, newOrder } from "../services/order.service";
+import { get } from "http";
 
 
 interface IOrder{
@@ -84,3 +85,14 @@ try {
 }
     }
 )
+
+
+// get all order only for admin
+
+export const getAllOrderService = CatchAsyncError(async(req:Request,res:Response,next:NextFunction)=>{
+  try {
+    getAllOrderServices(req,res,next);
+  } catch (error:any) {
+    return next(new ErrorHandler(error.message,500));
+  }
+})

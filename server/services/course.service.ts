@@ -10,3 +10,15 @@ export const createCourse = CatchAsyncError(async(data:any,res:Response)=>{
         course
     });
 })
+
+export const getAllCoursesService = async (res: Response) => {
+    try {
+        const courses = await CourseModel.find().sort({ createdAt: -1 });
+        return courses;
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Failed to retrieve courses"
+        });
+    }
+}
