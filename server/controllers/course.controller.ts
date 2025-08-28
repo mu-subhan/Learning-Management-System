@@ -7,6 +7,9 @@ import CourseModel from '../models/course.model';
 import { redis } from '../utils/redis';
 import mongoose, { mongo } from 'mongoose';
 import sendMail from '../utils/sendMail';
+import NotificationModel from '../models/notificationModel';
+import path from 'path';
+import ejs from 'ejs';
 
 
 // Create Course
@@ -191,6 +194,12 @@ const newQuestion:any={
 }
 // add this question to our course content
 courseContent.questions.push(newQuestion);
+
+await NotificationModel.create({
+    user:req.user?._id,
+    title: "New Question Added",
+    message: `Your question "${question}" has been added successfully in ${courseContent.title}.`,
+})
 // save the updated course 
 await course?.save();
 
@@ -250,13 +259,18 @@ export const addAnswer = CatchAsyncError(async(req:Request,res:Response,next:Nex
         
        if(req.user?._id === question.user._id){
         //create a notification
-
+        await NotificationModel.create({
+            user:req.user?._id,
+            title: "New Answer Added",
+            message: `Your answer "${answer}" has been added successfully in ${courseContent.title}.`,
+        });
     }else{
         const data = {
             name:question.user.name,
             title:courseContent.title,
         };
 
+        const html = await ejs.renderFile(path.join(__dirname,"../mails/question-reply.ejs"), data);
         try {
            await sendMail({
             email:question.user.email,

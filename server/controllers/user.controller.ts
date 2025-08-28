@@ -14,9 +14,6 @@ import cloudinary from "cloudinary";
 
 
 
-
-
-
 // register user
 interface IRegistrationBody{
     email: string;

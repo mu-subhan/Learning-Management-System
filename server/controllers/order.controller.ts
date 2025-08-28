@@ -35,13 +35,14 @@ try {
     const data:any={
         courseId:course._id,
         userId: user?._id,
+        payment_info,
     }
 
     newOrder(data,res,next);
 
     const mailData={
         order:{
-            _id: (course._id).slice(0,6),
+            _id: String(course._id).slice(0,6),
             name:course.name,
             price:course.price,
             date: new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})
@@ -63,7 +64,7 @@ try {
     } catch (error:any) {
         return next(new ErrorHandler(error.message,500))
     }
-    user?.courses.push(course._id);
+    user?.courses.push({ courseId: String(course._id) });
     await user?.save();
 
     await NotificationModel.create({
