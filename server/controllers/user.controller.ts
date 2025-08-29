@@ -9,7 +9,7 @@ import path from "path";
 import sendMail from "../utils/sendMail";
 import { accessTokenOptions, refreshTokenOptions, sendToken } from "../utils/jwt";
 import { redis } from "../utils/redis";
-import { getAllUserService, getUserById } from "../services/user.services";
+import { getAllUserService, getUserById, updateUserRoleService } from "../services/user.services";
 import cloudinary from "cloudinary";
 
 
@@ -419,3 +419,38 @@ export const getUserService = CatchAsyncError(async(req:Request,res:Response,nex
         return next(new ErrorHandler("Failed to get all users", 500));
     }
 });
+
+// update user role ----only for admin 
+export const updateUserRole = CatchAsyncError(async(req:Request,res:Response,next:NextFunction)=>{
+
+    try {
+        const {id,role} = req.body;
+        updateUserRoleService(res,id,role);
+
+    } catch (error:any) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+})
+
+
+// delete user only for admin 
+export const deleteUser= CatchAsyncError(async(req:Request,res:Response,next:NextFunction)=>{
+    try {
+        const {id} = req.params;
+        console.log("Delete user id:", id);
+        const user = await userModel.findById(id);
+        if(!user){
+            return next(new ErrorHandler("User not found",404));
+        }
+        await user.deleteOne();
+
+        await redis.del(id);
+
+        res.status(200).json({
+            success:true,
+            message:"User deleted successfully"
+        });
+    } catch (error:any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+})
