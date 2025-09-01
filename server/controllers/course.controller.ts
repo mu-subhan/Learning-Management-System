@@ -89,11 +89,14 @@ export const getSingleCourse = CatchAsyncError(async(req:Request,res:Response,ne
         const course = JSON.parse(isCacheExist);
         return res.status(200).json({
             success:true,
+            message: "Course fetched successfully",
             course
         })
        }
        else{
          const course = await CourseModel.findById(req.params.id).select("-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links")
+         
+            await redis.set(courseId, JSON.stringify(course), 'EX', 7 * 24 * 60 * 60); // 7 days
         res.status(200).json({
             success:true,
             course
