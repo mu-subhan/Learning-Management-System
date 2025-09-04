@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import Head from "next/head"; // ✅ this is required
 
 interface HeadProps {
   title: string;

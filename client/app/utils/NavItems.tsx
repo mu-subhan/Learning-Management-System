@@ -32,9 +32,9 @@ type Props = {
 const NavItems:React.FC<Props> = ({activeItem, isMobile}) => {
   return (
   <>
-<div className='hidden min-[800px]:flex'>
-  {navItemsData.map((item, index) => (
-    <Link href={item.url} key={index} passHref>
+<div className='hidden md:flex'>
+  {navItemsData.map((i, index) => (
+    <Link href={i.url} key={index} passHref>
       <span
         className={`${
           activeItem === index
@@ -42,7 +42,7 @@ const NavItems:React.FC<Props> = ({activeItem, isMobile}) => {
             : "dark:text-white text-white"
         } px-6 font-Poppins font-[400] text-[18px]`}
       >
-        {item.name}
+        {i.name}
       </span>
     </Link>
   ))}
@@ -51,8 +51,8 @@ const NavItems:React.FC<Props> = ({activeItem, isMobile}) => {
 {isMobile && (
   <div className='md:hidden mt-5'>
     <div className='w-full text-center py-6'>
-      {navItemsData.map((item, index) => (
-        <Link href={item.url} key={index} passHref>
+      {navItemsData.map((i, index) => (
+        <Link href={i.url} key={index} passHref>
           <span
             className={`${
               activeItem === index
@@ -60,7 +60,7 @@ const NavItems:React.FC<Props> = ({activeItem, isMobile}) => {
                 : "dark:text-white text-white"
             } px-6 font-Poppins font-[400] text-[18px]`}
           >
-            {item.name}
+            {i.name}
           </span>
         </Link> 
       ))}

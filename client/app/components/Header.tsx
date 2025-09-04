@@ -1,3 +1,4 @@
+'use client'
 import Link from 'next/link';
 import React ,{ FC, useState}from 'react'
 import NavItems from "../utils/NavItems"
@@ -16,35 +17,37 @@ const Header:FC<Props>=({open,setOpen,activeItem})=>{
   const [openSidebar,setOpenSidebar] = useState(false);
 
 
-   if(typeof window !=="undefined"){
-    window.addEventListener("scroll",()=>{
-      if(window.scrollY > 85){
-        setActive(true);
-      }else{
-        setActive(false);
-      }
-    });
-   }
+   React.useEffect(() => {
+  const handleScroll = () => {
+    if (window.scrollY > 80) {
+      setActive(true);
+    } else {
+      setActive(false);
+    }
+  };
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
 
-   const handleClose = (e: any)=>{
-     if(e.target.id === "screen"){
+   const handleClose = (e: React.MouseEvent<HTMLDivElement>) => {
+     if ((e.target as HTMLDivElement).id === "screen") {
        setOpenSidebar(false);
      }
    }
    
   return (
-    <div className='w-full relative'>
+    <div className='w-full relative bg-background text-foreground'>
  <div
         className={`${
           active
-            ? "dark:bg-opacity-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black top-0 left-0 w-full h-[80px] z-[80] border-b dark:border-[#ffffff1c] shadow-xl transition duration-500 bg-black"
+            ? "dark:bg-opacity-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black top-0 left-0 w-full h-[80px] z-[80] border-b dark:border-[#ffffff1c] shadow-xl transition duration-500"
             : "w-full border-b dark:border-[#ffffff1c] h-[80px] z-[80] dark:shadow"
         }`}
       >
-  <div className="w-[95%] 800px:w-[92%] m-auto py-2  h-full">
+  <div className="w-[95%] md:w-[92%] m-auto py-2  h-full">
           <div className="w-full h-[80px] flex items-center justify-between p-3">
             {/* Logo */}
-            <div>
+            <div className="text-foreground font-Poppins font-[500] text-[25px]">
               <Link
                 href={"/"}
                 className="text-[25px] font-Poppins font-[500] text-black dark:text-white "

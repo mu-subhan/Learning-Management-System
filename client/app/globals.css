@@ -2,8 +2,8 @@
 
 
 /* === Theme variables for light mode === */
-:root {
-  --background: #ffffff;
+:root{
+   --background: #ffffff; 
   --foreground: #171717;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -29,11 +29,18 @@
 }
 */
 
-body {
+/* body {
   color: rgb(var(--foreground-rgb));
-  /* background: rgb(var(--background-rgb)); */
-}
-.hero_animation {
+  background: rgb(var(--background-rgb));
+} */
+
+/* @theme{
+  --font-Poppins: 'Poppins', sans-serif;
+  --font-Josefin: 'Josefin Sans', sans-serif;
+  --font-Cursive: 'Dancing Script', cursive;
+} */
+
+/* .hero_animation {
   background-image: linear-gradient(
     147.92deg,
     hsla(239, 76%, 53%, 0.456) 10.41%,
@@ -67,4 +74,73 @@ body {
   83.33% {
     opacity: 0.4;
   }
+} */
+
+@theme {
+  --font-family-poppins: Poppins, sans-serif;
+  --font-family-josefin: "Josefin Sans", sans-serif;
+  --font-family-cursive: "Dancing Script", cursive;
+  
+  --color-background: #ffffff;
+  --color-foreground: #000000;
+  --color-primary: #3b82f6;
+  --color-secondary: #ef4444;
+  
+  --breakpoint-xs: 400px;
+  --breakpoint-custom-md: 800px;
+  --breakpoint-custom-lg: 1000px;
+  --breakpoint-custom-xl: 1100px;
+  --breakpoint-custom-2xl: 1200px;
+  --breakpoint-custom-3xl: 1300px;
+  --breakpoint-custom-4xl: 1500px;
+}
+
+/* Dark mode variables */
+
+  @theme {
+    --color-background: #000000;
+    --color-foreground: #ffffff;
+  }
+
+/* Custom CSS Variables for theme switching */
+:root {
+  --background: var(--color-background);
+  --foreground: var(--color-foreground);
+}
+
+.dark {
+  --color-background: #0a0a0a;
+  --color-foreground: #ededed;
+}
+
+/* Your existing custom styles */
+body {
+  color: var(--color-foreground);
+}
+
+.hero_animation {
+  background-image: linear-gradient(
+    147.92deg,
+    hsla(239, 76%, 53%, 0.456) 10.41%,
+    hsla(0, 0%, 100%, 0) 89.25%
+  );
+  animation: changeBackgroundColor 8s infinite alternate;
+}
+
+@keyframes changeBackgroundColor {
+  0%, 100% { opacity: 1; }
+  16.67% { opacity: 0.9; }
+  33.33% { opacity: 0.8; }
+  50% { opacity: 0.6; }
+  66.67% { opacity: 0.5; }
+  83.33% { opacity: 0.4; }
+}
+
+/* Custom utility classes */
+.btn-primary {
+  @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors;
+}
+
+.container-custom {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
 }
