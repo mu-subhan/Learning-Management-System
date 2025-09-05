@@ -18,9 +18,8 @@ export const ThemeSwitcher = () => {
     <div className='flex items-center justify-center mx-4'>
       {theme === 'light' ? (
         <BiMoon
-          className='cursor-pointer'
+          className='cursor-pointer text-white'
           size={25}
-          fill='black'
           onClick={() => setTheme('dark')}
         />
       ) : (

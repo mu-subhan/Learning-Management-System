@@ -64,7 +64,7 @@ const Header:FC<Props>=({open,setOpen,activeItem})=>{
             {/* only for mobile */}
             <div className="md:hidden">
               <HiOutlineMenuAlt3
-                className="text-black dark:text-white"
+                className="cursor-pointer text-black dark:text-white"
                 size={25}
                 onClick={() => setOpenSidebar(true)}
               />
