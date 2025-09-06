@@ -1,123 +1,69 @@
 @import "tailwindcss";
 
-
 /* === Theme variables for light mode === */
-:root{
-   --background: #ffffff; 
+:root {
+  --background: #ffffff; 
   --foreground: #171717;
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --border: #e5e7eb;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 /* === Theme variables for dark mode, controlled by .dark class on <html> === */
-.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-}
 
-/* Optional: Keep system dark mode as fallback if you want */
-/*
+/* System dark mode fallback */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
 }
-*/
 
-/* body {
-  color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-rgb));
-} */
-
-/* @theme{
-  --font-Poppins: 'Poppins', sans-serif;
-  --font-Josefin: 'Josefin Sans', sans-serif;
-  --font-Cursive: 'Dancing Script', cursive;
-} */
-
-/* .hero_animation {
-  background-image: linear-gradient(
-    147.92deg,
-    hsla(239, 76%, 53%, 0.456) 10.41%,
-    hsla(0, 0%, 100%, 0) 89.25%
-  );
-  animation: changeBackgroundColor 8s infinite alternate;
+body {
+  color: var(--foreground);
+  background: var(--background);
+  transition: color 0.3s ease, background-color 0.3s ease;
 }
 
-@keyframes changeBackgroundColor {
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  16.67% {
-    opacity: 0.9;
-  }
-
-  33.33% {
-    opacity: 0.8;
-  }
-
-  50% {
-    opacity: 0.6;
-  }
-
-  66.67% {
-    opacity: 0.5;
-  }
-
-  83.33% {
-    opacity: 0.4;
-  }
-} */
-
+/* Tailwind v4 Theme Configuration */
 @theme {
-  --font-family-poppins: Poppins, sans-serif;
-  --font-family-josefin: "Josefin Sans", sans-serif;
-  --font-family-cursive: "Dancing Script", cursive;
+  /* Font Families */
+  --font-family-poppins: var(--font-Poppins), Poppins, sans-serif;
+  --font-family-josefin: var(--font-Josefin), "Josefin Sans", sans-serif;
+  --font-family-cursive: var(--font-Cursive), "Dancing Script", cursive;
   
+  /* Colors */
   --color-background: #ffffff;
-  --color-foreground: #000000;
+  --color-foreground: #171717;
+  --color-border: #e5e7eb;
   --color-primary: #3b82f6;
   --color-secondary: #ef4444;
   
+  /* Custom Breakpoints */
   --breakpoint-xs: 400px;
-  --breakpoint-custom-md: 800px;
-  --breakpoint-custom-lg: 1000px;
-  --breakpoint-custom-xl: 1100px;
-  --breakpoint-custom-2xl: 1200px;
-  --breakpoint-custom-3xl: 1300px;
-  --breakpoint-custom-4xl: 1500px;
+  --breakpoint-800: 800px;
+  --breakpoint-1000: 1000px;
+  --breakpoint-1100: 1100px;
+  --breakpoint-1200: 1200px;
+  --breakpoint-1300: 1300px;
+  --breakpoint-1500: 1500px;
+  
+  /* Background Images */
+  --gradient-radial: radial-gradient(var(--tw-gradient-stops));
+  --gradient-conic: conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops));
 }
 
-/* Dark mode variables */
-
-  @theme {
-    --color-background: #000000;
-    --color-foreground: #ffffff;
-  }
-
-/* Custom CSS Variables for theme switching */
-:root {
-  --background: var(--color-background);
-  --foreground: var(--color-foreground);
-}
-
+/* Dark mode theme variables */
 .dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --border: #374151;
   --color-background: #0a0a0a;
   --color-foreground: #ededed;
+  --color-border: #374151;
 }
 
-/* Your existing custom styles */
-body {
-  color: var(--color-foreground);
-}
-
+/* Hero Animation */
 .hero_animation {
   background-image: linear-gradient(
     147.92deg,
@@ -138,9 +84,81 @@ body {
 
 /* Custom utility classes */
 .btn-primary {
-  @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors;
+  @apply bg-primary hover:bg-primary/90 text-white font-medium py-2 px-4 rounded-md transition-colors;
 }
 
 .container-custom {
   @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Custom font utility classes */
+.font-poppins {
+  font-family: var(--font-family-poppins);
+}
+
+.font-josefin {
+  font-family: var(--font-family-josefin);
+}
+
+.font-cursive {
+  font-family: var(--font-family-cursive);
+}
+
+/* Custom gradient utilities */
+.bg-gradient-radial {
+  background-image: var(--gradient-radial);
+}
+
+.bg-gradient-conic {
+  background-image: var(--gradient-conic);
+}
+
+/* Custom breakpoint utilities - Use these classes instead of 800px:flex */
+@media (min-width: 400px) {
+  .xs\:flex { display: flex; }
+  .xs\:hidden { display: none; }
+  .xs\:block { display: block; }
+  .xs\:grid { display: grid; }
+}
+
+@media (min-width: 800px) {
+  .custom-md\:flex { display: flex; }
+  .custom-md\:hidden { display: none; }
+  .custom-md\:block { display: block; }
+  .custom-md\:grid { display: grid; }
+}
+
+@media (min-width: 1000px) {
+  .custom-lg\:flex { display: flex; }
+  .custom-lg\:hidden { display: none; }
+  .custom-lg\:block { display: block; }
+  .custom-lg\:grid { display: grid; }
+}
+
+@media (min-width: 1100px) {
+  .custom-xl\:flex { display: flex; }
+  .custom-xl\:hidden { display: none; }
+  .custom-xl\:block { display: block; }
+  .custom-xl\:grid { display: grid; }
+}
+
+@media (min-width: 1200px) {
+  .custom-2xl\:flex { display: flex; }
+  .custom-2xl\:hidden { display: none; }
+  .custom-2xl\:block { display: block; }
+  .custom-2xl\:grid { display: grid; }
+}
+
+@media (min-width: 1300px) {
+  .custom-3xl\:flex { display: flex; }
+  .custom-3xl\:hidden { display: none; }
+  .custom-3xl\:block { display: block; }
+  .custom-3xl\:grid { display: grid; }
+}
+
+@media (min-width: 1500px) {
+  .custom-4xl\:flex { display: flex; }
+  .custom-4xl\:hidden { display: none; }
+  .custom-4xl\:block { display: block; }
+  .custom-4xl\:grid { display: grid; }
 }
