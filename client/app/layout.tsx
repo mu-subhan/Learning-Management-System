@@ -1,11 +1,10 @@
-
+'use client'
 import "./globals.css";
 import { Poppins } from "next/font/google";
 import { Josefin_Sans } from "next/font/google";
 import { ThemeProvider } from "./utils/theme-provider";
 import { Toaster } from "react-hot-toast";
-
-
+import { Providers } from "./Provider";
 
 
 const poppins = Poppins({
@@ -32,7 +31,8 @@ export default function RootLayout({
      <body
   className={`${poppins.variable} ${josefin.variable} bg-background text-foreground`}
 >
-      <ThemeProvider 
+    <Providers>
+        <ThemeProvider 
         attribute="class" 
         defaultTheme="system" 
         enableSystem
@@ -41,6 +41,7 @@ export default function RootLayout({
          {children}
          <Toaster position="top-center" reverseOrder={false}/>
        </ThemeProvider>
+    </Providers>
       </body>
     </html>
   );
