@@ -14,12 +14,10 @@ import layoutRouter from "./routes/layout.route";
 // body parser
 app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: process.env.ORIGIN,
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+}));
 
 //  route 
 app.use("/api/v1", userRouter,courseRouter,orderRouter,notificationRoute,analyticsRouter,layoutRouter);
