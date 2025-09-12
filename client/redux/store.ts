@@ -14,3 +14,14 @@ export const store = configureStore({
     devTools:false,
     middleware:(getDefaultMiddleware)=> getDefaultMiddleware().concat(apiSlice.middleware)
 })
+
+// call the refresh token dunciton on every page load
+const initializeApp = async()=>{
+    await store.dispatch(apiSlice.endpoints.refreshToken.initiate({},{forceRefetch:true}));
+ 
+    // for load user 
+    await store.dispatch(apiSlice.endpoints.loadUser.initiate({},{forceRefetch:true}));
+
+}
+
+initializeApp();

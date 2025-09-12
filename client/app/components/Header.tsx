@@ -8,6 +8,12 @@ import CustomModal from "../utils/CustomModal";
 import Login from "../components/Auth/Login"
 import SignUp from "../components/Auth/SignUp";
 import Verfication from "../components/Auth/Verfication"
+import { useSelector } from 'react-redux';
+import Image from 'next/image';
+import avatar from "../../public/assets/avatardefault.jpg"
+import { useSession } from 'next-auth/react';
+import { useSocialAuthMutation } from '@/redux/features/auth/authApi';
+import toast from 'react-hot-toast';
 
 type Props = {
   open: boolean;
@@ -21,7 +27,38 @@ const Header: FC<Props> = ({ open,setOpen, activeItem, route, setRoute }) => {
 
   const [active, setActive] = useState(false);
   const [openSidebar, setOpenSidebar] = useState(false);
+  const {user} = useSelector((state:any)=>state.auth)
+  const { data: session, status } = useSession();
+  const [socialAuth,{isSuccess,error}] = useSocialAuthMutation();
 
+  // Prevent duplicate social auth linking and toasts (StrictMode double-invoke, remounts)
+  const hasLinkedRef = React.useRef(false);
+
+  // Trigger social auth only once when NextAuth session is authenticated and no redux user
+  React.useEffect(() => {
+    if (hasLinkedRef.current) return; // dont call if already called prevent dublicate call
+    if (status !== 'authenticated') return; // wait for session to be authenticated first to avoid double calling
+    if (user) return;  // dont call id user already exists
+
+    if (session?.user?.email) {
+      // hasLinkedRef.current = true; mark as called
+      socialAuth({
+        email: session.user.email,
+        name: session.user.name,
+        avatar: session.user.image,
+      });
+    }
+  }, [status, session, user, socialAuth]);
+
+  // Show toast once based on mutation result
+  React.useEffect(() => {
+    if (isSuccess) {
+      toast.success("User logged in successfully");
+    }
+    if (error) {
+      toast.error("Something went wrong");
+    }
+  }, [isSuccess, error]);
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -40,6 +77,8 @@ const Header: FC<Props> = ({ open,setOpen, activeItem, route, setRoute }) => {
       setOpenSidebar(false);
     }
   }
+  // console.log("user data",user);
+  
 
   return (
     <div className='w-full relative bg-background text-foreground'>
@@ -75,11 +114,24 @@ const Header: FC<Props> = ({ open,setOpen, activeItem, route, setRoute }) => {
                 />
 
               </div>
-              <HiOutlineUserCircle
+              {
+                user ? (
+<Link href={"/profile"}>
+<Image
+src={user.avatar ? user.avatar :avatar}
+alt="user profile"
+className='w-8 h-8 rounded-full cursor-pointer'
+/>
+
+</Link>
+                ):(
+                  <HiOutlineUserCircle
                 className="hidden custom-md:block cursor-pointer text-foreground hover:text-primary transition-colors"
                 size={25}
                 onClick={() => setOpen(true)}
               />
+                )
+              }
             </div>
           </div>
         </div>
