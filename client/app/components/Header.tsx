@@ -23,13 +23,13 @@ type Props = {
   setRoute: (route: string) => void;
 }
 
-const Header: FC<Props> = ({ open,setOpen, activeItem, route, setRoute }) => {
+const Header: FC<Props> = ({ open, setOpen, activeItem, route, setRoute }) => {
 
   const [active, setActive] = useState(false);
   const [openSidebar, setOpenSidebar] = useState(false);
-  const {user} = useSelector((state:any)=>state.auth)
+  const { user } = useSelector((state: any) => state.auth)
   const { data: session, status } = useSession();
-  const [socialAuth,{isSuccess,error}] = useSocialAuthMutation();
+  const [socialAuth, { isSuccess, error }] = useSocialAuthMutation();
 
   // Prevent duplicate social auth linking and toasts (StrictMode double-invoke, remounts)
   const hasLinkedRef = React.useRef(false);
@@ -78,14 +78,14 @@ const Header: FC<Props> = ({ open,setOpen, activeItem, route, setRoute }) => {
     }
   }
   // console.log("user data",user);
-  
+
 
   return (
     <div className='w-full relative bg-background text-foreground'>
       <div
         className={`${active
-            ? "bg-background/80 backdrop-blur-sm top-0 left-0 w-full h-[80px] z-[80] border-b border-border shadow-xl transition duration-500"
-            : "w-full border-b border-border h-[80px] z-[80] shadow-sm"
+          ? "bg-background/80 backdrop-blur-sm top-0 left-0 w-full h-[80px] z-[80] border-b border-border shadow-xl transition duration-500"
+          : "w-full border-b border-border h-[80px] z-[80] shadow-sm"
           }`}
       >
         <div className="w-[95%] md:w-[92%] m-auto py-2  h-full">
@@ -116,20 +116,23 @@ const Header: FC<Props> = ({ open,setOpen, activeItem, route, setRoute }) => {
               </div>
               {
                 user ? (
-<Link href={"/profile"}>
-<Image
-src={user.avatar ? user.avatar :avatar}
-alt="user profile"
-className='w-8 h-8 rounded-full cursor-pointer'
-/>
+                  <Link href={"/profile"}>
+                    <Image
+                      src={user.avatar ? user.avatar.url : avatar}
+                      alt="user profile"
+                      width={30}
+                      height={30}
+                      className='w-8 h-8 rounded-full cursor-pointer'
+                      style={{border:activeItem === 5 ? "2px solid #30bbb2ca" : "none"}}
+                    />
 
-</Link>
-                ):(
+                  </Link>
+                ) : (
                   <HiOutlineUserCircle
-                className="hidden custom-md:block cursor-pointer text-foreground hover:text-primary transition-colors"
-                size={25}
-                onClick={() => setOpen(true)}
-              />
+                    className="hidden custom-md:block cursor-pointer text-foreground hover:text-primary transition-colors"
+                    size={25}
+                    onClick={() => setOpen(true)}
+                  />
                 )
               }
             </div>
@@ -160,54 +163,54 @@ className='w-8 h-8 rounded-full cursor-pointer'
       </div>
 
 
-   {/* for login */}
+      {/* for login */}
       {
         route === "Login" && (
-           <>
-          { open && (
-         <CustomModal
-         open={open}
-         setOpen={setOpen}
-         setRoute={setRoute}
-         activeItem={activeItem}
-         component={Login}
-         />
-           )}
-           </>
+          <>
+            {open && (
+              <CustomModal
+                open={open}
+                setOpen={setOpen}
+                setRoute={setRoute}
+                activeItem={activeItem}
+                component={Login}
+              />
+            )}
+          </>
         )
       }
 
       {/* for signup */}
 
-       {
+      {
         route === "Sign-Up" && (
-           <>
-          { open && (
-         <CustomModal
-         open={open}
-         setOpen={setOpen}
-         setRoute={setRoute}
-         activeItem={activeItem}
-         component={SignUp}
-         />
-           )}
-           </>
+          <>
+            {open && (
+              <CustomModal
+                open={open}
+                setOpen={setOpen}
+                setRoute={setRoute}
+                activeItem={activeItem}
+                component={SignUp}
+              />
+            )}
+          </>
         )
       }
 
-             {
+      {
         route === "Verfication" && (
-           <>
-          { open && (
-         <CustomModal
-         open={open}
-         setOpen={setOpen}
-         setRoute={setRoute}
-         activeItem={activeItem}
-         component={Verfication}
-         />
-           )}
-           </>
+          <>
+            {open && (
+              <CustomModal
+                open={open}
+                setOpen={setOpen}
+                setRoute={setRoute}
+                activeItem={activeItem}
+                component={Verfication}
+              />
+            )}
+          </>
         )
       }
 
