@@ -161,4 +161,34 @@ body {
   .custom-4xl\:hidden { display: none; }
   .custom-4xl\:block { display: block; }
   .custom-4xl\:grid { display: grid; }
+  .custom-4xl\:w-\[16\%\] { width: 16%; }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #1771c6;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #f5f5f5b0;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #32ae7e;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
 }

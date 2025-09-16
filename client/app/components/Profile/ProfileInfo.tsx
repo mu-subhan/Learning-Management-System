@@ -4,8 +4,8 @@ import Image from 'next/image';
 import React, { FC, useEffect, useState } from 'react'
 import { AiOutlineCamera } from 'react-icons/ai';
 import avatarDefault from "../../../public/assets/avatardefault.jpg"
-import { useEditProfileMutation, useUpdateAvatarMutation } from '@/redux/features/user/userApi';
-import { useLoadUserQuery } from '@/redux/features/api/apiSlice';
+import { useEditProfileMutation, useUpdateAvatarMutation } from '../../../redux/features/user/userApi';
+import { useLoadUserQuery } from '../../../redux/features/api/apiSlice';
 import toast from 'react-hot-toast';
 
 type Props = {

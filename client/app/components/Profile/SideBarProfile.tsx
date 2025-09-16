@@ -26,7 +26,7 @@ const SideBarProfile:FC<Props> = ({user,active,avatar,setActive,logOutHandler}) 
         onClick={() => setActive(1)}
       >
         <Image
-          alt=""
+          alt="user avatar"
           src={
             user.avatar || avatar ? user.avatar.url || avatar : avatarDefault
           }
