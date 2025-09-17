@@ -294,6 +294,20 @@ const CourseContent: FC<Props> = ({ active, setActive, courseContentData, setCou
                               }
                             />
                           </div>
+
+                            <input
+                        type="text"
+                        placeholder="Source Code... (Link title)"
+                        className={`${styles.input}`}
+                        value={link.title}
+                        onChange={(e) => {
+                          const updatedData = [...courseContentData];
+                          updatedData[index].links[linkIndex].title =
+                            e.target.value;
+                          setCourseContentData(updatedData);
+                        }}
+                      />
+                      
                           <input
                             type="url"
                             placeholder="Source Code Url... (Link URL)"
@@ -306,6 +320,7 @@ const CourseContent: FC<Props> = ({ active, setActive, courseContentData, setCou
                               setCourseContentData(updatedData);
                             }}
                           />
+                          
                         </div>
                       ))
                     }
