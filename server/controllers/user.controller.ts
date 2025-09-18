@@ -213,10 +213,11 @@ export const updateAccessToken = CatchAsyncError(async (req: Request, res: Respo
 
  await redis.set(String(user._id),JSON.stringify(user), 'EX', 7 * 24 * 60 * 60); // 7 days
 
-  res.status(200).json({
-    success: true,
-    accessToken
-  });
+//   res.status(200).json({
+//     success: true,
+//     accessToken
+//   }); comment these lines because we want response/ data of created course 
+next();
  } catch (error) {
     // console.log("Update access token error", error);
     return next(new ErrorHandler("Failed to update access token", 400));
