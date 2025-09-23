@@ -1,4 +1,4 @@
-'use clieny'
+'use client'
 import { styles } from '@/app/styles/styles';
 import Image from 'next/image';
 import React, { FC, useEffect, useState } from 'react'
@@ -45,9 +45,16 @@ const ProfileInfo:FC<Props> = ({user,avatar}) => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (name !== "") {
-      await editProfile(name);
+      await editProfile({ name });
     }
   };
+
+  useEffect(() => {
+    // keep local input in sync if the user prop updates from store
+    if (user && user.name) {
+      setName(user.name);
+    }
+  }, [user?.name]);
 
   return (
     <>
