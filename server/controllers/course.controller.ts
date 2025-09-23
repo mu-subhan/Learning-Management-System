@@ -18,15 +18,16 @@ import axios from 'axios';
 export const uploadCourse = CatchAsyncError(async(req:Request,res:Response,next:NextFunction)=>{
     try {
         const data = req.body;
-        const thumbanil = data.thumbanil;
-        if(thumbanil){
-            const myCloud = await cloudinary.v2.uploader.upload(thumbanil,{
+        console.log("course data",data);
+        const thumbnail = data.thumbnail;
+        if(thumbnail){
+            const myCloud = await cloudinary.v2.uploader.upload(thumbnail,{
                 folder:"courses",
                 width:150,
                 // crop:"scale"
             });
 
-            data.thumbanil = {
+            data.thumbnail = {
                 public_id:myCloud.public_id,
                 url:myCloud.secure_url
             };
@@ -39,46 +40,47 @@ export const uploadCourse = CatchAsyncError(async(req:Request,res:Response,next:
 })
 
 // edit course
-export const editCourse = CatchAsyncError(async(req:Request,res:Response,next:NextFunction)=>{
+export const editCourse = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
-        
-    const data= req.body;
-    const thumbanil =data.thumbanil;
-    if(thumbanil){
-        
-        await cloudinary.v2.uploader.destroy(thumbanil.public_id);
-
-        const myCloud = await cloudinary.v2.uploader.upload(thumbanil,{
-            folder:"courses",
-            width:150,
-            // crop:"scale"
+      const data = req.body;
+      const thumbnail = data.thumbnail;
+      const courseId = req.params.id;
+      const courseData = (await CourseModel.findById(courseId)) as any;
+      if (thumbnail && !thumbnail.startsWith("https")) {
+        await cloudinary.v2.uploader.destroy(courseData.thumbnail.public_id);
+        const myCloud = await cloudinary.v2.uploader.upload(thumbnail, {
+          folder: "courses",
         });
-
-        data.thumbanil = {
-            public_id:myCloud.public_id,
-            url:myCloud.secure_url
+        data.thumbnail = {
+          public_id: myCloud.public_id,
+          url: myCloud.secure_url,
         };
-
-    }
-    
-    const courseId = req.params.id;
-
-    const course = await CourseModel.findByIdAndUpdate(
-        courseId,{
-            $set:data
-        },
+      }
+      if (thumbnail.startsWith("https")) {
+        data.thumbnail = {
+          public_id: courseData?.thumbnail.public_id,
+          url: courseData?.thumbnail.url,
+        };
+      }
+      const course = await CourseModel.findByIdAndUpdate(
+        courseId,
+        { $set: data },
         { new: true }
-    )
-
-    res.status(201).json({
-        success:true,
-        course
-    })
-
-} catch (error:any) {
-  return next(new ErrorHandler(error.message,500));
-}
-})
+      );
+      if (redis) {
+        await redis.del(`course:${courseId}`);
+        await redis.del("allCourses");
+      }
+      res.status(201).json({
+        success: true,
+        course,
+      });
+    } catch (error:any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
 
 // get signle course -- without purchasing
 export const getSingleCourse = CatchAsyncError(async(req:Request,res:Response,next:NextFunction)=>{
@@ -401,10 +403,18 @@ export const addReplyToReview = CatchAsyncError(async(req:Request,res:Response,n
 export const getAllCoursesServices = CatchAsyncError(async(req:Request,res:Response,next:NextFunction)=>{
     try {
         const courses = await getAllCoursesService(res);
+        // normalize legacy field name thumbanil -> thumbnail for older documents
+        const normalized = courses?.map((c: any) => {
+            const obj = c.toObject ? c.toObject() : c;
+            if (!obj.thumbnail && obj.thumbanil) {
+                obj.thumbnail = obj.thumbanil;
+            }
+            return obj;
+        });
         res.status(200).json({
             success: true,
             message: "All courses retrieved successfully",
-            courses
+            courses: normalized ?? courses
         });
     } catch (error) {
         return next(new ErrorHandler("Internal server error",500));
