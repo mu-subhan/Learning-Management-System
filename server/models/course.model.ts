@@ -38,7 +38,8 @@ interface ICourse extends Document{
     description:string;
     price:number;
     estimatedPrice:number;
-    thumbnail:string;
+    thumbnail:object;
+    demoUrl:string;
     tags:string;
     level:string;
     benefits:{title:string}[];
