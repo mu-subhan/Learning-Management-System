@@ -1,4 +1,5 @@
 import { styles } from '@/app/styles/styles';
+import { useGetHeroDataQuery } from '@/redux/features/layout/layoutApi';
 import React, { FC, useState } from 'react'
 
 type Props = {
@@ -10,6 +11,10 @@ type Props = {
 
 const CourseInformation:FC<Props> = ({courseInfo,setCourseInfo,active,setActive}) => {
   const [dragging,setDragging] = useState(false);
+
+  const {data} = useGetHeroDataQuery("Categories",{
+    refetchOnFocus: true,
+  });
 
 
   // Handles form submission, moves to the next step
@@ -170,11 +175,11 @@ const CourseInformation:FC<Props> = ({courseInfo,setCourseInfo,active,setActive}
                 setCourseInfo({ ...courseInfo, categories: e.target.value })
               }
             >
-              {/* {categories.map((category: any) => (
+              {categories.map((category: any) => (
                 <option key={category._id} value={category.title}>
                   {category.title}
                 </option>
-              ))} */}
+              ))}
             </select>
           </div>
         </div>
