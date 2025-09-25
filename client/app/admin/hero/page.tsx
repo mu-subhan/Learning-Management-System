@@ -4,7 +4,7 @@ import React from "react";
 import AdminSidebar from "../../components/Admin/sideBar/AdminSideBar";
 import AdminProtected from "../../hooks/adminProtected";
 import DashBoardHero from "../../components/Admin/DashboardHero";
-import EditHero from "../../components/Admin/Customize/EditHero";
+import EditHero from "../../components/Admin/Customization/EditHero";
 
 const Page = () => {
   return (
