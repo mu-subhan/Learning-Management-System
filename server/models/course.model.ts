@@ -1,6 +1,5 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
 import { IUser } from "./user.model";
-import { time, timeStamp } from "console";
 
 interface IComment extends Document{
     user:IUser,
@@ -36,6 +35,7 @@ interface ICouseData extends Document{
 interface ICourse extends Document{
     name:string;
     description:string;
+    categories:string;
     price:number;
     estimatedPrice:number;
     thumbnail:object;
@@ -95,6 +95,10 @@ const courseSchema = new Schema<ICourse>({
     price:{
         type:Number,
         required:true,
+    },
+   categories: {
+    type: String,
+    required: true,
     },
     estimatedPrice:{
         type:Number,
