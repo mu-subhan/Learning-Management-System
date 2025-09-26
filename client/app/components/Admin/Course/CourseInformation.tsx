@@ -1,6 +1,6 @@
 import { styles } from '@/app/styles/styles';
 import { useGetHeroDataQuery } from '@/redux/features/layout/layoutApi';
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 
 type Props = {
   courseInfo: any;
@@ -15,7 +15,14 @@ const CourseInformation:FC<Props> = ({courseInfo,setCourseInfo,active,setActive}
   const {data} = useGetHeroDataQuery("Categories",{
     refetchOnFocus: true,
   });
+  const [categories,setCategories] = useState<any>(data?.layout?.categories || []);
 
+  useEffect(()=>{
+    if(data){
+      setCategories(data.layout.categories);
+    }
+
+  },[data]);
 
   // Handles form submission, moves to the next step
   const handleSubmit = (e: any) => {
