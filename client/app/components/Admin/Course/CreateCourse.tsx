@@ -62,7 +62,7 @@ const CreateCourse = (props: Props) => {
   ]);
   const [courseData, setCourseData] = useState({});
   
-  console.log("data ",courseData)
+  // console.log("data ",courseData)
 
   const handleSubmit = async () => {
     //format benfits array
