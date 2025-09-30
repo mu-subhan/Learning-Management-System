@@ -15,7 +15,7 @@ export const getUserAnalytics = CatchAsyncError(async(req:Request,res:Response,n
 
         res.status(200).json({
             success: true,
-            data: users
+            users,
         });
     } catch (error:any) {
         return next(new ErrorHandler(error.message, 500));

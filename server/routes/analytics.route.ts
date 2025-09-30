@@ -1,5 +1,5 @@
 import express from "express";
-import { getCourseAnalytics, getOrderAnalytics, getUserAnalytics } from "../controllers/analtic.controller";
+import { getCourseAnalytics, getOrderAnalytics, getUserAnalytics } from "../controllers/analytic.controller";
 import { authorizeRoles, isAuthenticated } from "../middleware/auth";
 import { updateAccessToken } from "../controllers/user.controller";
 
