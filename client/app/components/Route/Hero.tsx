@@ -2,10 +2,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { BiSearch } from 'react-icons/bi'
+import {useGetHeroDataQuery} from "../../../redux/features/layout/layoutApi";
 
 type Props = {}
 
 const Hero = (props: Props) => {
+  const {data,refetch} = useGetHeroDataQuery("Banner",{})
 
   const [search, setSearch] = React.useState('')
 
@@ -15,6 +17,7 @@ const Hero = (props: Props) => {
       window.location.href = `/courses?search=${search}`
     }
   }
+  // console.log("image",data?.layout?.banner.image?.url);
   return (
 <div className="w-full min-h-screen flex flex-col lg:flex-row items-center justify-center lg:justify-between px-4 lg:px-8 py-10 lg:py-0 relative overflow-hidden">
           {/* Animated background circle */}
@@ -23,7 +26,7 @@ const Hero = (props: Props) => {
           <div className="lg:w-1/2 flex items-center justify-center z-10 mb-8 lg:mb-0">
             
               <Image
-                src='/assets/hero-banner-1.png'
+                src={data?.layout?.banner.image?.url || "/assets/hero-banner.png"}
                 width={400}
                 height={400}
                 alt="Hero Banner"
@@ -35,11 +38,11 @@ const Hero = (props: Props) => {
           <div className="lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left z-10">
             {/* Main headline */}
             <h1 className="text-3xl lg:text-5xl font-bold text-gray-800 dark:text-white mb-4 leading-tight">
-              {/* {data?.layout?.banner?.title} */} Learn Anytime, Anywhere with Our Online Courses
+              {data?.layout?.banner?.title} 
             </h1>
             {/* Subtitle or description */}
             <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-lg">
-              {/* {data?.layout?.banner?.subTitle} */} Join thousands of learners and gain new skills with our expert-led courses.
+              {data?.layout?.banner?.subTitle} 
             </p>
             {/* Search form */}
             <form onSubmit={handleSearch} className="w-full max-w-md mb-8">
