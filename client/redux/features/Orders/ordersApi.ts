@@ -10,14 +10,14 @@ export const orderApi = apiSlice.injectEndpoints({
     }),
     getStripePublishAbleKey: builder.query({
       query: () => ({
-        url: "payment/stripePublishAbleKey",
+        url: "payment/stripepublishablekey",
         method: "GET",
         credentials: "include" as const,
       }),
     }),
     createPaymentIntent: builder.mutation({
       query: (amount) => ({
-        url: "payment/process",
+        url: "payment",
         method: "POST",
         body: { amount },
         credentials: "include" as const,
