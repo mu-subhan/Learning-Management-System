@@ -40,7 +40,7 @@ try {
 
     const user = await userModel.findById(req.user?._id);
 
-    const courseExistInUser = user?.courses.some((course:any)=>course._id.toString()=== courseId)
+    const courseExistInUser = user?.courses.some((course:any)=>course.courseId?.toString()=== courseId)
 
     if(courseExistInUser){
         return next(new ErrorHandler("You have already purchased this course",400))

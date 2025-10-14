@@ -139,7 +139,7 @@ export const getCourseByUser = CatchAsyncError(async(req:Request,res:Response,ne
     const userCourseList = req.user?.courses;
     const courseId = req.params.id;
 
-    const courseExists = userCourseList?.find((course:any) => course._id.toString() === courseId);
+    const courseExists = userCourseList?.find((course:any) => course.courseId?.toString() === courseId);
 
     if (!courseExists) {
         return next(new ErrorHandler("You are not authorized to access this course", 403));
