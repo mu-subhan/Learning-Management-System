@@ -36,7 +36,9 @@ const CourseDetails: FC<Props> = ({ data, clientSecret, stripePromise }) => {
   const discountPercentagePrice = discountPercentage.toFixed(0);
   //checking weather the user has purchased this course or not
   const isPurchased =
-    user && user.courses?.find((item: any) => item._id === data._id);
+    user && user.courses?.find((item: any) => item.courseId === data._id);
+
+    console.log("course details data", user.courses);
 
   const handleOrder = (e:any) => {
     setOpen(true);
