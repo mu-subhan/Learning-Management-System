@@ -38,7 +38,7 @@ const CourseDetails: FC<Props> = ({ data, clientSecret, stripePromise }) => {
   const isPurchased =
     user && user.courses?.find((item: any) => item.courseId === data._id);
 
-    console.log("course details data", user.courses);
+  
 
   const handleOrder = (e:any) => {
     setOpen(true);
@@ -185,7 +185,7 @@ const CourseDetails: FC<Props> = ({ data, clientSecret, stripePromise }) => {
                               }
                               width={50}
                               height={50}
-                              alt=""
+                              alt="comment user avatar"
                               className="w-[50px] h-[50px] rounded-full object-cover"
                             />
                           </div>
