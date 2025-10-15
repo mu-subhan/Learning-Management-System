@@ -244,7 +244,9 @@ export const addAnswer = CatchAsyncError(async(req:Request,res:Response,next:Nex
        //    create a new answer object
        const newAnswer:any = {
         user:req.user,
-        answer
+        answer,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(), 
        }
 
     //    add this answer to our course content
@@ -298,7 +300,9 @@ export const addAnswer = CatchAsyncError(async(req:Request,res:Response,next:Nex
 interface IAddReviewData{
     review:string;
     rating:number;
-    userId:string
+    userId:string;
+    courseId:string;
+
 }
 
 export const addReview = CatchAsyncError(async(req:Request,res:Response,next:NextFunction)=>{
@@ -307,9 +311,12 @@ try {
 
 //    console.log("user course list",userCourseList)
    const courseId = req.params.id;
-
+//  console.log("course id",courseId)
+ 
 //    check if course already exit in userCourseList base on id
-const courseExists = userCourseList?.some((course:any) => course._id.toString() === courseId.toString());
+//  changed course._id to courseId to match with userCourseList structure
+const courseExists = userCourseList?.find((course:any) => courseId.toString() === courseId.toString());
+
 // console.log("course check",courseExists)
 
 if(!courseExists){
@@ -331,17 +338,21 @@ course?.reviews.forEach((rev:any)=>{
     avg += rev.rating;
 });
 if(course){
-    avg /= course?.reviews.length;
+  course.rating = avg /= course?.reviews.length;
 }
 
 await course?.save();
 
-const notification = {
-    title:"New Review Received",
-    message:`${req.user?.name} has added a new review on your course ${course?.name}`,
-    // user:course?.user
-}
+ await redis.set(courseId,JSON.stringify(course),'EX',604800); // 7 days
+
 // create new notifcation 
+await NotificationModel.create({
+    user:req.user?._id,
+    title: "New Review Added",
+       message:`${req.user?.name} has added a new review on your course ${course?.name}`,
+
+})
+
 
 res.status(201).json({
     success: true,
@@ -377,7 +388,9 @@ export const addReplyToReview = CatchAsyncError(async(req:Request,res:Response,n
    // Create a new reply object
    const replyData:any = {
        user: req.user,
-       comment
+       comment,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(), 
    };
    
    if(!review.commentReplies){
@@ -385,7 +398,10 @@ export const addReplyToReview = CatchAsyncError(async(req:Request,res:Response,n
    }
 
   review.commentReplies?.push(replyData);
-   await course.save();
+
+   await course?.save();
+
+   await redis.set(courseId, JSON.stringify(course), 'EX', 604800); // 7 days
 
    res.status(201).json({
        success: true,
