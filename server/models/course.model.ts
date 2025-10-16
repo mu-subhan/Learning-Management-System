@@ -32,12 +32,12 @@ interface ICouseData extends Document{
     questions:IComment[];
 }
 
-interface ICourse extends Document{
+export interface ICourse extends Document{
     name:string;
     description:string;
     categories:string;
     price:number;
-    estimatedPrice:number;
+    estimatedPrice?:number;
     thumbnail:object;
     demoUrl:string;
     tags:string;

@@ -1,3 +1,4 @@
+require('dotenv').config();
 import userModel from "../models/user.model";
 import path from "path";
 import ejs from "ejs";
@@ -10,7 +11,6 @@ import { NextFunction,Request,Response } from "express";
 import { getAllOrderServices, newOrder } from "../services/order.service";
 import { IOrder } from "../models/orderModel";
 import { redis } from "../utils/redis";
-require('dotenv').config();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 
@@ -26,7 +26,7 @@ export const createOrder= CatchAsyncError(async(
     req:Request,res:Response,next:NextFunction)=>{
 try {
     const {courseId,payment_info}=req.body as IOrder;
-
+     //Verify Stripe Payment Intent if payment_info is provided
     if(payment_info){
         if("id" in payment_info){
             const paymentIntentId = payment_info.id;
@@ -56,7 +56,6 @@ try {
         payment_info,
     }
 
-    newOrder(data,res,next);
 
     const mailData={
         order:{
@@ -88,18 +87,23 @@ try {
 
     await user?.save();
 
+     course.purchased = (course.purchased || 0) + 1;
+
+    await course.save();
+    
     await NotificationModel.create({
         user:user?._id,
         title:"New Order",
         message:`You have new order from ${course?.name}`,
     })
 
-    res.status(201).json({
-        success:true,
-        message:"Order created successfully",
-        order: course
-    })
 
+    // res.status(201).json({
+    //     success:true,
+    //     message:"Order created successfully",
+    //     order: course
+    // })
+ newOrder(data,res,next)
 } catch (error:any) {
     return next(new ErrorHandler(error.message,500))
 }
