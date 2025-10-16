@@ -9,6 +9,10 @@ import { AiFillStar, AiOutlineArrowLeft, AiOutlineArrowRight, AiOutlineStar } fr
 import { BiMessage } from 'react-icons/bi';
 import { VscVerifiedFilled } from 'react-icons/vsc';
 import { format } from 'timeago.js';
+import socketIO from "socket.io-client";
+
+const ENDPOINT =process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || "";
+const socketId = socketIO(ENDPOINT,{transports:['websocket']});
 
 type Props = {
     data: any;
@@ -23,23 +27,23 @@ type Props = {
 const CourseContentMedia = ({ data, id, activeVideo, setActiveVideo, user, refetch }: Props) => {
 
 
-const [activeBar, setActiveBar] = useState(0);
+    const [activeBar, setActiveBar] = useState(0);
 
-const [question, setQuestion] = useState("");
+    const [question, setQuestion] = useState("");
 
-const [rating, setRating] = useState(1);
+    const [rating, setRating] = useState(1);
 
-const [review, setReview] = useState("");
+    const [review, setReview] = useState("");
 
-const [answer, setAnswer] = useState("");
+    const [answer, setAnswer] = useState("");
 
-const [questionId, setQuestionId] = useState("");
+    const [questionId, setQuestionId] = useState("");
 
-const [reply, setReply] = useState("");
+    const [reply, setReply] = useState("");
 
-const [reviewId, setReviewId] = useState("");
+    const [reviewId, setReviewId] = useState("");
 
-const [isReviewReply, setIsReviewReply] = useState(false);
+    const [isReviewReply, setIsReviewReply] = useState(false);
 
 
     const [
@@ -64,7 +68,7 @@ const [isReviewReply, setIsReviewReply] = useState(false);
             error: reviewError,
         },
     ] = useAddReviewInCourseMutation({});
-    
+
     // Check if user already reviewed
     const { data: courseData, refetch: courseRefetch } = useGetCourseDetailsQuery(
         id,
@@ -72,7 +76,7 @@ const [isReviewReply, setIsReviewReply] = useState(false);
             refetchOnMountOrArgChange: true,
         }
     );
-   
+
     const course = courseData?.course;
 
     const [
@@ -133,9 +137,14 @@ const [isReviewReply, setIsReviewReply] = useState(false);
     useEffect(() => {
         // Question Response
         if (questionSuccess) {
-            toast.success("Question added successfully");
             setQuestion("");
             refetch();
+            toast.success("Question added successfully");
+             socketId.emit("notification",{
+             title:"New Question Added",
+             message:`You have new question from ${data[activeVideo].title}`,
+             userId:user._id,
+            })
         }
         if (error) {
             if ("data" in error) {
@@ -149,6 +158,13 @@ const [isReviewReply, setIsReviewReply] = useState(false);
             setAnswer("");
             refetch();
             toast.success("Answer Added Successfully!");
+            if(user.role !== 'admin'){
+                socketId.emit("notification",{
+             title:"New Answer Added",
+             message:`Your answer "${answer}" has been added successfully in ${data[activeVideo].title}.`,
+             userId:user._id,
+            })
+            }
 
         }
         if (answerError) {
@@ -160,10 +176,15 @@ const [isReviewReply, setIsReviewReply] = useState(false);
 
         // Review Response
         if (reviewSuccess) {
-            toast.success("Review Added Successfully!");
             setReview("");
             setRating(1);
             courseRefetch();
+            toast.success("Review Added Successfully!");
+            socketId.emit("notification",{
+             title:"New Review Added",
+             message:`You have new review from ${data[activeVideo].title}`,
+             userId:user._id,
+            })
         }
         if (reviewError) {
             if ("data" in reviewError) {
@@ -436,7 +457,7 @@ const [isReviewReply, setIsReviewReply] = useState(false);
                                                         </small>
                                                     </div>
                                                 </div>
-                                                 {user.role === "admin" &&
+                                                {user.role === "admin" &&
                                                     item.commentReplies.length === 0 && (
                                                         <span
                                                             className={`${styles.label} !ml-10 cursor-pointer`}
@@ -447,7 +468,7 @@ const [isReviewReply, setIsReviewReply] = useState(false);
                                                         >
                                                             Add Reply
                                                         </span>
-                                                    )} 
+                                                    )}
 
                                                 {/* Review Reply */}
                                                 {isReviewReply && reviewId === item._id && (
