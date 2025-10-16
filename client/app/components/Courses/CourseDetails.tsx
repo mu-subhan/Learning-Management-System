@@ -17,31 +17,45 @@ import CheckOutForm from '../Payment/CheckOutForm';
 type Props = {
 
   data: any;
-  clientSecret?: string;
-  stripePromise?: any;
+  clientSecret: string;
+  stripePromise: any;
+  setRoute:any;
+  setOpen:any;
 }
 
-const CourseDetails: FC<Props> = ({ data, clientSecret, stripePromise }) => {
+const CourseDetails: FC<Props> = ({ data, clientSecret, stripePromise,setOpen:openAuthModel,setRoute }) => {
 
   const { data: userData, refetch } = useLoadUserQuery(undefined, {});
   const [open,setOpen] = useState(false);
   const [user, setUser] = useState<any>();
+
   useEffect(() => {
     setUser(userData?.user);
   }, [userData]);
+
   //persentage logic
+  
   const discountPercentage =
     ((data?.estimatedPrice - data?.price) / data?.estimatedPrice) * 100;
+
   //getting only 2-digits after decimal
+
   const discountPercentagePrice = discountPercentage.toFixed(0);
+
   //checking weather the user has purchased this course or not
+
   const isPurchased =
     user && user.courses?.find((item: any) => item.courseId === data._id);
 
   
 
   const handleOrder = (e:any) => {
+   if(user){
     setOpen(true);
+   }else{
+    setRoute("Login");
+    openAuthModel(true);
+   }
   }
   return (
     <>

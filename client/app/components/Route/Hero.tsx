@@ -3,23 +3,34 @@ import Link from 'next/link'
 import React from 'react'
 import { BiSearch } from 'react-icons/bi'
 import {useGetHeroDataQuery} from "../../../redux/features/layout/layoutApi";
-
+import Loader from "../Loader/Loader"
+import { useRouter } from 'next/navigation';
 type Props = {}
 
 const Hero = (props: Props) => {
-  const {data,refetch} = useGetHeroDataQuery("Banner",{})
+  const {data,isLoading} = useGetHeroDataQuery("Banner",{})
 
   const [search, setSearch] = React.useState('')
+  const router = useRouter();
 
   const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    if(search.trim() !== ''){
-      window.location.href = `/courses?search=${search}`
+     e.preventDefault();
+    if (search === "") {
+      return;
+    } else {
+      router.push(`/courses?title=${search}`);
     }
-  }
-  // console.log("image",data?.layout?.banner.image?.url);
+  };
+  
+
+
   return (
-<div className="w-full min-h-screen flex flex-col lg:flex-row items-center justify-center lg:justify-between px-4 lg:px-8 py-10 lg:py-0 relative overflow-hidden">
+
+<>
+{isLoading ? (
+  <Loader/>
+):(
+  <div className="w-full min-h-screen flex flex-col lg:flex-row items-center justify-center lg:justify-between px-4 lg:px-8 py-10 lg:py-0 relative overflow-hidden">
           {/* Animated background circle */}
           <div className="absolute top-[75px] lg:left-[100px]  w-[300px] h-[300px] lg:w-[500px] lg:h-[500px] hero_animation rounded-full opacity-20 lg:opacity-30"></div>
           {/* Hero banner Image */}
@@ -101,6 +112,8 @@ const Hero = (props: Props) => {
             </div>
           </div>
         </div>
+)}
+</>
   )
 }
 
